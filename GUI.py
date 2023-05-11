@@ -12,9 +12,10 @@ class MainWindow(QWidget):
         # Set the window title and size
         self.setWindowTitle("Fabric Defect Detection")
         screen_size = QApplication.primaryScreen().availableGeometry().size()
-        self.setFixedSize(screen_size.width() * 3 // 4, screen_size.height() * 3 // 4)
+        self.setFixedSize(screen_size.width() * 4 // 4, screen_size.height() * 4 // 4)
+        self.showMaximized()
 
-        self.title_label = QLabel("Fabric Defect Detection")
+        self.title_label = QLabel("FABRIC DEFECT DETECTION AND CLASSIFICATION")
         self.title_label.setAlignment(Qt.AlignCenter)
         font = QFont()
         font.setPointSize(40)
@@ -25,7 +26,7 @@ class MainWindow(QWidget):
         self.upload_folder_button = QPushButton("Upload Folder")
         self.detect_defect_button = QPushButton("Detect Defect")
         self.image_label = QLabel("Upload Fabric image or folder")
-        self.image_label.setFixedSize(600, 500)
+        self.image_label.setFixedSize(1000, 900)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setStyleSheet("font-size: 30px; color: #34b7eb ;")
 
@@ -59,6 +60,10 @@ class MainWindow(QWidget):
         """
         self.upload_image_button.setStyleSheet(button_style)
         self.upload_folder_button.setStyleSheet(button_style)
+        self.exit_button = QPushButton("Exit")
+        self.exit_button.setFont(font)
+        self.exit_button.setStyleSheet(button_style)
+        self.exit_button.clicked.connect(QApplication.quit)
 
         detect_button_style = """
             QPushButton {
@@ -90,6 +95,7 @@ class MainWindow(QWidget):
         vbox.addWidget(self.upload_image_button)
         vbox.addWidget(self.upload_folder_button)
         vbox.addWidget(self.detect_defect_button)
+        vbox.addWidget(self.exit_button)
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         hbox.addWidget(self.image_label)
