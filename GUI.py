@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QVBoxLayout, QHBoxLayout, QLabel, QFileDialog
-from PyQt5.QtGui import QPixmap, QFont
+from PyQt5.QtGui import QPixmap, QFont, QColor, QIcon
 from PyQt5.QtCore import Qt
 from detect_image import detect_defect
 from detect_folder import detect_defects_in_folder
@@ -11,22 +11,29 @@ class MainWindow(QWidget):
 
         # Set the window title and size
         self.setWindowTitle("Fabric Defect Detection")
+        # logo = QIcon("D:\\FabricDataset\\Capture.PNG")
+        # self.setWindowIcon(logo)
         screen_size = QApplication.primaryScreen().availableGeometry().size()
         self.setFixedSize(screen_size.width() * 4 // 4, screen_size.height() * 4 // 4)
         self.showMaximized()
 
-        self.title_label = QLabel("FABRIC DEFECT DETECTION AND CLASSIFICATION")
+        self.title_label = QLabel("<i>FABRIC DEFECT DETECTION AND CLASSIFICATION</i>")
         self.title_label.setAlignment(Qt.AlignCenter)
-        font = QFont()
-        font.setPointSize(40)
+        font = QFont("Arial", 36, QFont.Bold)  # Use Arial font with size 48 and bold style
         self.title_label.setFont(font)
 
-        # Create the buttons and labels
+        # Set the color for the title label
+        color = QColor("#1D267D")  # Use a custom color, you can change it to any desired color
+        self.title_label.setStyleSheet(f"color: {color.name()};")
+
+        # Create the buttons
         self.upload_image_button = QPushButton("Upload Image")
         self.upload_folder_button = QPushButton("Upload Folder")
         self.detect_defect_button = QPushButton("Detect Defect")
+        self.exit_button = QPushButton("Exit")
+
+        # Create the image label and set its properties
         self.image_label = QLabel("Upload Fabric image or folder")
-        self.image_label.setFixedSize(1000, 900)
         self.image_label.setAlignment(Qt.AlignCenter)
         self.image_label.setStyleSheet("font-size: 30px; color: #34b7eb ;")
 
@@ -44,6 +51,7 @@ class MainWindow(QWidget):
                 border: 2px solid #3366cc;
                 border-radius: 10px;
                 padding: 20px;
+                min-width: 150px;
             }
 
             QPushButton:hover {
@@ -62,7 +70,6 @@ class MainWindow(QWidget):
         self.upload_folder_button.setStyleSheet(button_style)
         self.exit_button = QPushButton("Exit")
         self.exit_button.setFont(font)
-        self.exit_button.setStyleSheet(button_style)
         self.exit_button.clicked.connect(QApplication.quit)
 
         detect_button_style = """
@@ -87,22 +94,39 @@ class MainWindow(QWidget):
             }
         """
         self.detect_defect_button.setStyleSheet(detect_button_style)
+        self.exit_button.setStyleSheet(detect_button_style)
+        self.image_label = QLabel("Upload Fabric image or folder")
+        self.image_label.setFixedSize(900, 800)
+        self.image_label.setAlignment(Qt.AlignCenter)
+        self.image_label.setStyleSheet("font-size: 30px; color: #34b7eb ;")
 
         self.image_label.setStyleSheet("background-color: #d3f0ed; border: 7px solid #34b7eb; border-radius: 10px;")
 
         # Set the layout
-        vbox = QVBoxLayout()
-        vbox.addWidget(self.upload_image_button)
-        vbox.addWidget(self.upload_folder_button)
-        vbox.addWidget(self.detect_defect_button)
-        vbox.addWidget(self.exit_button)
-        hbox = QHBoxLayout()
-        hbox.addStretch(1)
-        hbox.addWidget(self.image_label)
-        hbox.addStretch(1)
-        hbox.addLayout(vbox)
-        hbox.addStretch(1)
-        self.setLayout(hbox)
+        vbox_buttons = QVBoxLayout()
+        vbox_buttons.addWidget(self.upload_image_button)
+        vbox_buttons.addWidget(self.upload_folder_button)
+        vbox_buttons.addWidget(self.detect_defect_button)
+        vbox_buttons.addWidget(self.exit_button)
+        vbox_buttons.setSpacing(20)
+
+        hbox_main = QHBoxLayout()
+        hbox_main.addWidget(self.image_label)
+        hbox_main.addSpacing(100)  # Adjust spacing between image label and buttons
+        hbox_main.addLayout(vbox_buttons)
+
+        vbox_main = QVBoxLayout()
+        vbox_main.addWidget(self.title_label)
+        vbox_main.addStretch(1)
+        vbox_main.addLayout(hbox_main)
+        vbox_main.addStretch(1)  # Stretch to fill available space
+
+        self.setLayout(vbox_main)
+
+        self.upload_image_button.setFixedWidth(350)
+        self.upload_folder_button.setFixedWidth(350)
+        self.detect_defect_button.setFixedWidth(350)
+        self.exit_button.setFixedWidth(350)
 
         # Connect the buttons to their respective functions
         self.upload_image_button.clicked.connect(self.upload_image)
